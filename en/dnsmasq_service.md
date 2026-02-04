@@ -24,7 +24,7 @@ To configure it correctly, you must first select the IP address (in this example
 
 a) Run `cbsd initenv-tui` and set the `nodeippool` setting to 172.16.0.102-243 (we assigned 172.16.0.101 to dnsmasq). This will force CBSD to automatically assign static addresses for VMs and containers only within the specified range, ensuring they don't conflict with DHCP.
 
-b) You can get a pre-built image from the repository, or use CBSDFile from the recipe collection (requires `git` to be installed) to generate a container from scratch. 
+b) You can get a pre-built image from the repository, or use [CBSDFile](https://github.com/cbsd/cbsdfile-recipes/blob/master/jail/dnsmasq/CBSDfile) from the recipe collection (requires `git` to be installed) to generate a container from scratch. 
 
 <details>
   <summary>Option 1: A pre-built dnsmasq image</summary>
