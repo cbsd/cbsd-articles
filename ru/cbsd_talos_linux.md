@@ -296,7 +296,7 @@ spec:
 
 ```
 
-Примемняем:
+Применяем:
 ```
 kubectl apply -f test-pod-writer.yaml
 ```
@@ -305,11 +305,4 @@ kubectl apply -f test-pod-writer.yaml
 ```
 talosctl -n 172.16.0.56 list /var/mnt/local-data
 talosctl -n 172.16.0.56 cat /var/mnt/local-data/test-log.txt
-```
-
-
-
-Проверка:
-```
-kubectl run -i --tty busybox --image=busybox --restart=Never -- sh
 ```
