@@ -136,7 +136,7 @@ talosctl bootstrap
 
 bootstrap запустит `etcd` и компоненты Kubernetes.
 
-Одним из признаков, что bootstrap прошел усешно, будет массовое озеленение компонентов кубернетес в состояние Healty:
+Одним из признаков, что bootstrap прошел усешно, будет массовое озеленение компонентов кубернетес в состояние Healthy:
 
 <center><img src="https://convectix.com/img/talos2.png" width="1024" title="talos_view2" alt="talos_view2"/></center>
 
