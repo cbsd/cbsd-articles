@@ -556,6 +556,99 @@ gzip -f --best /usr/jails/jails/dnsmasq/usr/local/srv/pxe/FreeBSD-NFS-15.0/boot/
 
 </details>
 
+### NetBSD PXE: sysinst (Using the official ISO image)
+
+<details>
+  <summary>Step-by-step HOW-TO</summary>
+
+Here’s an example of a NetBSD PXE installation using a dnsmasq container.
+
+1) Fetch the official image using the fetch utility or via a CBSD profile:
+
+```
+fetch -o /tmp/NetBSD-10.1-amd64.iso https://cdn.netbsd.org/pub/NetBSD/NetBSD-10.1/images/NetBSD-10.1-amd64.iso
+```
+Alternatively (includes scanning and picking the fastest mirrors):
+
+```
+cbsd fetch_iso name=NetBSD-10-x86_64 fastscan=1 keepname=1 dstdir=/tmp
+```
+
+You should now have the ISO at /tmp/NetBSD-10.1-amd64.iso. Let's verify:
+
+```
+file -s /tmp/NetBSD-10.1-amd64.iso
+```
+
+> /tmp/NetBSD-10.1-amd64.iso: ISO 9660 CD-ROM filesystem data 'NETBSD_101' (bootable)
+
+2) Mount the ISO to the /mnt directory (using mdconfig + mount):
+```
+mount_cd9660 /dev/`mdconfig -a -t vnode -f /tmp/NetBSD-10.1-amd64.iso` /mnt
+```
+
+If the image is valid, you'll be able to list its contents:
+```
+ls -1 /mnt/
+```
+```
+.cshrc
+.profile
+.rr_moved
+altroot
+amd64
+bin
+boot
+boot.cfg
+dev
+etc
+install.sh
+lib
+libdata
+libexec
+mnt
+mnt2
+netbsd
+rescue
+root
+sbin
+stand
+targetroot
+tmp
+usr
+var
+```
+
+2) Setting up the PXE structure
+
+a)
+Copy everything from /mnt/* to the container's directory:
+```
+mkdir -p ~cbsd/jails/dnsmasq/usr/local/srv/pxe/NetBSD-10.1
+cp -a /mnt/* ~cbsd/jails/dnsmasq/usr/local/srv/pxe/NetBSD-10.1/
+umount /mnt
+```
+
+b) Configuring /usr/local/srv/pxe/boot.cfg (Hint: when specifying the root path in /usr/local/srv/pxe/NetBSD-10.1/, keep in mind it always looks relative to the TFTP root):
+```
+banner=Welcome to NetBSD Network Install
+menu=Install NetBSD:boot net0:/NetBSD-10.1/amd64/binary/kernel/netbsd-INSTALL.gz -s
+menu=Install NetBSD (auto-root):boot net0:/NetBSD-10.1/amd64/binary/kernel/netbsd-INSTALL.gz -a
+timeout=15
+default=1
+```
+
+c) The installer uses these default parameters; you'll need to update them manually during the interactive setup:
+
+Host: cdn.NetBSD.org
+Base directory: pub/NetBSD/NetBSD-10.1
+Binary set directory: /amd64/binary/sets
+Source set directory: /source/sets
+
+
+</details>
+
+
 ### Debian PXE: unattended/preseed/auto install (using the official ISO image)
 
 <details>

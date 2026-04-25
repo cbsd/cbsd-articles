@@ -24,3 +24,4 @@
 - [CBSD + Minikube](en/cbsd_minikube.md)
 - [CBSD + Talos Linux](en/cbsd_talos_linux.md)
 - [CBSD + K8S in hard way](en/cbsd_k8s_hard_way.md)
+- [CBSD + Minikube + Ansible AWX](en/cbsd_minikube_aws.md)

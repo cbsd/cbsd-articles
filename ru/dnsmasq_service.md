@@ -560,6 +560,97 @@ gzip -f --best /usr/jails/jails/dnsmasq/usr/local/srv/pxe/FreeBSD-NFS-15.0/boot/
 
 </details>
 
+
+### NetBSD PXE: sysinst (с использованием официального ISO образа)
+
+<details>
+  <summary>Step-by-step HOW-TO</summary>
+
+Пример PXE инсталляции NetBSD в контейнере dnsmasq.
+
+1) Получаем официальный образ через утилиту `fetch` или используя профиль CBSD:
+
+```
+fetch -o /tmp/NetBSD-10.1-amd64.iso https://cdn.netbsd.org/pub/NetBSD/NetBSD-10.1/images/NetBSD-10.1-amd64.iso
+```
+или (+ сканирование и поиск быстрых зеркал):
+```
+cbsd fetch_iso name=NetBSD-10-x86_64 fastscan=1 keepname=1 dstdir=/tmp
+```
+Результат - наличие ISO образа /tmp/NetBSD-10.1-amd64.iso, проверка:
+```
+file -s /tmp/NetBSD-10.1-amd64.iso
+```
+
+> /tmp/NetBSD-10.1-amd64.iso: ISO 9660 CD-ROM filesystem data 'NETBSD_101' (bootable)
+
+2) Смонтируем содержимое ISO образа в каталог /mnt (mdconfig + mount):
+```
+mount_cd9660 /dev/`mdconfig -a -t vnode -f /tmp/NetBSD-10.1-amd64.iso` /mnt
+```
+
+если образ корректный, мы можем вывести листинг директорий образа:
+```
+ls -1 /mnt/
+```
+```
+.cshrc
+.profile
+.rr_moved
+altroot
+amd64
+bin
+boot
+boot.cfg
+dev
+etc
+install.sh
+lib
+libdata
+libexec
+mnt
+mnt2
+netbsd
+rescue
+root
+sbin
+stand
+targetroot
+tmp
+usr
+var
+```
+
+2) Наполняем структуру PXE
+
+a)
+копируем /mnt/* в директорию контейнера:
+```
+mkdir -p ~cbsd/jails/dnsmasq/usr/local/srv/pxe/NetBSD-10.1
+cp -a /mnt/* ~cbsd/jails/dnsmasq/usr/local/srv/pxe/NetBSD-10.1/
+umount /mnt
+```
+
+b) файл /usr/local/srv/pxe/boot.cfg  (hint: как указать путь или корень в /usr/local/srv/pxe/NetBSD-10.1/ - всегда ищет в корне tftp:
+```
+banner=Welcome to NetBSD Network Install
+menu=Install NetBSD:boot net0:/NetBSD-10.1/amd64/binary/kernel/netbsd-INSTALL.gz -s
+menu=Install NetBSD (auto-root):boot net0:/NetBSD-10.1/amd64/binary/kernel/netbsd-INSTALL.gz -a
+timeout=15
+default=1
+```
+
+c) инсталлятор по-дефолту настроен на следующие параметры, их меняем вручную интерактивно:
+
+Host: cdn.NetBSD.org
+Base directory: pub/NetBSD/NetBSD-10.1
+Binary set directory: /amd64/binary/sets
+Source set directory: /source/sets
+
+
+</details>
+
+
 ### Debian PXE: unattended/preseed/auto install (с использованием официального ISO образа)
 
 <details>
