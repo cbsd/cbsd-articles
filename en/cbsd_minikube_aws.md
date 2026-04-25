@@ -13,7 +13,11 @@ a) First, let's create a dedicated namespace for AWX and switch our context to i
 kubectl create namespace awx
 ```
 
-b) There are several ways to deploy: using make deploy from the awx-operator repo, via Helm chart, or via kustomization.yaml. We’ll go with kustomize. 
+There are several ways to deploy: using make deploy from the awx-operator repo, via Helm chart, or via kustomization.yaml.
+
+<details>
+  <summary>Options 1: kustomization.yaml</summary>
+
 Here is the kustomization.yaml example:
 
 :bangbang: | :information_source: Check for the latest tag (e.g., 2.19.1) here: https://github.com/ansible/awx-operator/releases
@@ -38,7 +42,11 @@ namespace: awx
 kubectl apply -k .
 ```
 
-Alternatively, you can use the Helm chart:
+</details>
+
+
+<details>
+  <summary>Options 2: Helm chart</summary>
 
 ```
 helm repo add awx-operator https://ansible-community.github.io/awx-operator-helm/
@@ -46,13 +54,15 @@ helm repo update
 helm install awx-operator awx-operator/awx-operator -n awx --create-namespace
 ```
 
+</details>
+
 c) Verify that everything is in a Ready/Running state:
 
 ```
 kubectl get pods -n awx
 ```
 
-In my case (because one does not simply deploy an app on Linux without a hiccup!), I hit an error where the pod couldn't pull the image from the `brancz` repo:
+In my case with kustomization.yaml (because one does not simply deploy an app on Linux without a hiccup!), I hit an error where the pod couldn't pull the image from the `brancz` repo:
 
 ```
 minikube ssh "docker pull brancz/kube-rbac-proxy:v0.15.0"

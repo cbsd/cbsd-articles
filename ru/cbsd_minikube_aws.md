@@ -14,7 +14,12 @@ a) Создадим для AWX отдельный namespace и будем раб
 kubectl create namespace awx
 ```
 
-b) Есть несколько способов деплоя, `make deploy` в https://github.com/ansible/awx-operator.git, Helm chart или через kustomization.yaml, выберем его. Написал следующий kustomization.yaml:
+Есть несколько способов деплоя, `make deploy` в https://github.com/ansible/awx-operator.git, Helm chart или через kustomization.yaml.
+
+<details>
+  <summary>Вариант 1: kustomization.yaml</summary>
+
+a) Напишем следующий kustomization.yaml:
 
 :bangbang: | :information_source: Актуальный тег (2.19.1 в данном примере) смотрите тут: https://github.com/ansible/awx-operator/releases
 :---: | :---
@@ -34,17 +39,28 @@ images:
 namespace: awx
 ```
 
+b) apply:
+
 ```
 kubectl apply -k .
 ```
 
-Или helm chart:
 
+</details>
+
+
+<details>
+  <summary>Вариант 2: Helm chart</summary>
+
+
+a)
 ```
 helm repo add awx-operator https://ansible-community.github.io/awx-operator-helm/
 helm repo update
 helm install awx-operator awx-operator/awx-operator -n awx --create-namespace
 ```
+
+</details>
 
 c) Проверка что все в статусе Ready/running:
 
@@ -52,7 +68,7 @@ c) Проверка что все в статусе Ready/running:
 kubectl get pods -n awx
 ```
 
-В моем случае (нельзя на Linux просто так взять и просто продеплоить приложение!) возникла ошибка с тем, что под не скачивается с `brancz`:
+На момент написания статьи, в случае с kustomization.yaml (нельзя на Linux просто так взять и просто продеплоить приложение!) возникла ошибка с тем, что под не скачивается с `brancz`:
 ```
 minikube ssh "docker pull brancz/kube-rbac-proxy:v0.15.0"
 Error response from daemon: pull access denied for brancz/kube-rbac-proxy, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
